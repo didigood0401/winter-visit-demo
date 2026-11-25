@@ -1,0 +1,82 @@
+body {
+  background: #f6efde;
+  --gold: #e0be81;
+  --forest: #123b32;
+}
+header { padding-block: 20px; border-color: #496457; color: #fff6df }
+body::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: 850px; z-index: -1;
+  background: linear-gradient(90deg,#0b2520f5,#102d27dc 55%,#0b2420bc), url("assets/winter-forest.jpg") center 45% / cover;
+}
+.brand b { color: var(--gold) }
+#basketButton { color: #f7efd9; border-color: #9caa92 }
+#basketButton:hover { background: #335248 }
+.hero { padding: clamp(40px,6vw,90px) 0; color: #fff8e8; grid-template-columns: .9fr 1.1fr }
+.hero .eyebrow { color: var(--gold); letter-spacing: .14em }
+.hero h1 { font-size:clamp(54px,7.4vw,108px); line-height:.94 }
+.hero h1 em { color: var(--gold); font-weight: normal }
+.hero p { color: #eee9d9 }
+.hero .cta { background: #ffdca1; color: #2f3429; border-color: #ffdca1 }
+.hero .cta:hover { background: #ffebc8 }
+.folio { min-width: 0; perspective: 1300px }
+.postcard {
+  display:grid; width:100%; padding:0; border:0; border-radius:2px; position:relative;
+  background:#ede1c8; color:#173d30; text-align:left; font:inherit; isolation:isolate;
+  box-shadow:0 20px 40px #03150f65; transform:rotate(1deg);
+  perspective:1100px;
+}
+.postcard:hover { background:#ede1c8 }
+.cover,.inside { grid-area:1/1; width:100%; min-width:0; box-sizing:border-box }
+.inside {
+  min-height:clamp(265px,25vw,330px); display:flex; flex-direction:column; justify-content:center;
+  gap:12px; padding:clamp(22px,3.3vw,48px); border:8px solid #fff5df;
+  background:linear-gradient(105deg,#e6d8bb,#fff7e6 13%,#fbefda 95%,#e6d7b9);
+}
+.letterhead { font:600 11px/1.4 system-ui; letter-spacing:.14em; text-transform:uppercase; color:#775c35 }
+.inside strong,.cover-title { font:italic clamp(31px,3.6vw,58px)/1.02 Georgia,serif }
+#message { max-width:42ch; font:clamp(17px,1.45vw,21px)/1.4 Georgia,serif; overflow-wrap:anywhere }
+.inside i { font:italic 16px Georgia,serif; color:#94412e }
+.cover { position:relative; overflow:hidden; transform-origin:left center; backface-visibility:hidden; border:7px solid #fff3dc; pointer-events:none }
+.cover::after { content:""; position:absolute; inset:38% 0 0; background:linear-gradient(transparent,#0a211cbd) }
+.hero .cover img { position:absolute; inset:0; width:100%; height:100%; max-height:none; border:0; outline:0; transform:none; animation:none; box-shadow:none; object-fit:cover }
+.cover-title { position:absolute; z-index:1; left:5%; bottom:8%; color:#fff3d1; text-shadow:0 1px 8px #24221d }
+.seal { position:absolute; right:4%; top:7%; border:3px double #ffedbb; border-radius:50%; width:48px; height:48px; display:grid; place-items:center; background:#8e332d; color:#ffdf9c; font-size:27px; transform:rotate(12deg) }
+.postcard[aria-expanded="true"] .cover { transform:rotateY(-104deg); opacity:0 }
+.folio-tools { margin-top:18px; display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap }
+.folio-tools button { color:#ffe4b3; border:0; border-radius:0; padding:5px 0; border-bottom:1px solid #97835e; font-size:14px }
+.folio-tools button:hover { background:transparent; color:white }
+#catalog { position:relative; isolation:isolate; padding:38px 0 30px }
+#catalog::before { content:""; position:absolute; inset:0 calc((100% - 100vw)/2); background:#f6efde; z-index:-1 }
+body { overflow-x:clip; background:linear-gradient(#102d27 0 80%,#f6efde 80%) }
+footer { background:#f6efde; width:100%; padding-inline:max(4%,calc((100% - 1180px)/2)) }
+.section-head { border:0; padding-top:0 }
+.card { border-radius:2px; border-top:3px solid #526b56; background:#fffbef }
+.card:nth-child(n+3) { border-top-color:#b58a4b }
+.post-form { display:grid; gap:10px; margin-top:16px }
+.post-form label { margin:0 }
+.post-form textarea { width:100%; resize:vertical; min-height:62px; padding:10px; font:inherit; border:1px solid #aaa797; border-radius:5px }
+.post-form p { margin:0 }
+.hero .cover img { object-position:center 20% }
+.post-intro { display:flex; align-items:center; gap:18px }
+.bullfinch {
+  position:relative; flex:0 0 56px; height:48px;
+  background:radial-gradient(circle at 73% 24%,#fff2c9 0 1.5px,transparent 2px),
+    radial-gradient(ellipse at 67% 27%,#183b33 0 21%,transparent 22%),
+    radial-gradient(ellipse at 35% 57%,#52645c 0 24%,transparent 25%),
+    radial-gradient(ellipse at 51% 61%,#bd4434 0 43%,transparent 44%);
+}
+.bullfinch::before,.bullfinch::after { content:""; position:absolute; background:#283f37 }
+.bullfinch::before { width:14px;height:9px;right:0;top:13px;clip-path:polygon(0 0,100% 55%,0 100%) }
+.bullfinch::after { width:21px;height:18px;bottom:1px;left:0;clip-path:polygon(100% 0,85% 60%,0 100%) }
+@media(prefers-reduced-motion:no-preference) {
+  .postcard { transform:rotate(1deg) rotateX(var(--pitch,0deg)) rotateY(var(--yaw,0deg)); transition:transform .25s ease-out }
+  .cover { transition:transform .76s cubic-bezier(.3,.07,.15,1),opacity .22s ease .34s }
+  .postcard[aria-expanded="false"] .cover { transition-delay:0s,0s }
+}
+@media(max-width:650px) {
+  .hero { grid-template-columns:1fr; gap:28px; padding:30px 0 }
+  .hero h1 { font-size:clamp(55px,13vw,78px) }
+  .inside { min-height:240px; padding:20px }
+  .folio-tools { margin-top:12px }
+  #catalog { padding-top:26px }
+}
