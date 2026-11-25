@@ -33,7 +33,7 @@
   @keyframes dim { from { opacity: 0 } }
 }
 </style><link rel="stylesheet" href="post.css"></head><body>
-<header><div class="brand"><b aria-hidden="true">✶</b>Зимняя почта</div><button id="basketButton">Корзина · <span id="count">0</span></button></header>
+<header><div class="brand"><b aria-hidden="true">✶</b>Зимняя почта</div><nav class="site-nav" aria-label="По сайту"><a href="#catalog">Программы</a><a href="#rates">Тарифы</a><a href="guide.html">Гид для родителей</a></nav><button id="basketButton">Корзина · <span id="count">0</span></button></header>
 <main><section class="hero"><div><span class="eyebrow">Новогодние поздравления на дому</span><h1>Дед Мороз<br><em>в гости</em></h1><p>Пригласите Деда Мороза одного или со Снегурочкой. Выберите программу и время визита к вашей ёлке.</p><a class="cta" href="#catalog">Выбрать программу</a></div><div class="folio">
   <button class="postcard" id="postcard" aria-expanded="false" aria-controls="letter" aria-label="Открыть открытку">
     <span class="inside" id="letter" aria-hidden="true"><span class="letterhead">Письмо из зимнего леса</span><strong>С наступающим!</strong><span id="message">Пусть в новом году за вашим столом всегда найдётся место для того, по кому вы соскучились.</span><i>Ваш почтальон Снегирь</i></span>
@@ -41,7 +41,9 @@
   </button>
   <div class="folio-tools"><button id="turn" aria-controls="letter" aria-expanded="false">Открыть открытку</button><button id="compose">Написать со Снегирём</button></div>
 </div></section>
-<section id="catalog"><div class="section-head"><h2>Программы поздравлений</h2><span>15, 30 или 60 минут</span></div><div class="cards" id="cards"></div></section></main>
+<section id="catalog"><div class="section-head"><h2>Программы поздравлений</h2><span>15, 30 или 60 минут</span></div><p class="catalog-intro">Для тихого первого знакомства подойдёт один Дед Мороз. Если дети любят хороводы и игры по ролям, присмотритесь к дуэту со Снегурочкой. В VIP-программе у ребёнка есть своя роль в сказке.</p><div class="cards" id="cards"></div></section>
+<section class="guide-feature"><img src="assets/winter-forest.jpg" loading="lazy" alt="Заснеженная ёлка с золотой звездой и подарками"><div><h2>До первого стука в дверь</h2><p>Когда передать подарок? Как познакомить с Дедом Морозом малыша, который прячется за маму? Собрали сценарии встреч и памятку для тех, кто готовит сюрприз.</p><a href="guide.html">Читать гид для родителей →</a></div></section>
+<section id="rates" class="rate-section"><div><h2>Когда пригласить гостей</h2><p>Сравните, сколько стоит одна и та же программа в разные дни декабря. Время начала можно выбрать с 9:00 до 21:00 с шагом в час. На цену влияет дата и продолжительность визита.</p></div><div class="rate-sheet"><div class="fields"><label>Программа<select id="rateProgram"></select></label><label>Длительность<select id="rateMinutes"><option value="15">15 минут</option><option value="30">30 минут</option><option value="60">60 минут</option></select></label></div><table><caption>Стоимость одного визита</caption><thead><tr><th scope="col">Дата в декабре</th><th scope="col">Цена</th></tr></thead><tbody id="rateRows"></tbody></table><button class="primary" id="pickRate">Выбрать дату</button></div></section></main>
 <footer>Демонстрационный магазин. Цены примерные, оплата тестовая.</footer>
 <dialog id="panel" aria-labelledby="heading"><div class="between"><h2 id="heading"></h2><button class="close" id="close" aria-label="Закрыть окно">Закрыть</button></div><div id="content"></div></dialog>
 <script>
@@ -80,10 +82,11 @@ function show(title, html) {
   }
 }
 function displayCount(){el('count').textContent=basket.length}
-function selectProgram(id){
+function selectProgram(id, duration=15){
  const p=programs[id];
  show(p.name,'<form id="booking"><p>'+p.tier+' · '+p.description+'</p><div class="fields"><label>Дата визита<input type="date" id="date" required></label><label>Начало<select id="time"></select></label></div><label>Длительность<select id="minutes"><option value="15">15 минут</option><option value="30">30 минут</option><option value="60">60 минут</option></select></label><p class="muted">С 25 декабря действует праздничный тариф. 28 и 31 декабря цена повышается.</p><div class="between"><span>Стоимость визита</span><output class="total" id="quote" aria-live="polite"></output></div><button class="primary full">Добавить в корзину</button></form>');
  const date=el('date'),time=el('time'),minutes=el('minutes');
+ minutes.value=String(duration);
  date.min=first;date.max=last;date.value=[first,season+'-12-25'].sort()[1];
  for(let h=9;h<=21;h++){const t=String(h).padStart(2,'0')+':00';time.add(new Option(t,t,h===15,h===15))}
  function update(){el('quote').textContent=date.validity.valid?money(price(id,date.value,+minutes.value)):'Выберите дату'}
@@ -105,6 +108,22 @@ function openBasket(){
 }
 programs.forEach((p,i)=>{const card=document.createElement('button');card.className='card';card.innerHTML='<small>'+p.tier+'</small><h3>'+p.name+'</h3><p>'+p.description+'</p><strong>от '+money(p.rate)+'</strong>';card.onclick=()=>selectProgram(i);el('cards').append(card)});
 el('close').onclick=()=>panel.close();el('basketButton').onclick=openBasket;
+programs.forEach((program, index) => {
+  el('rateProgram').add(new Option(program.name + ' · ' + program.tier, index));
+});
+function renderRates() {
+  const rows = [['1–24 декабря', 1], ['25–27 декабря', 25], ['28–30 декабря', 28], ['31 декабря', 31]];
+  el('rateRows').replaceChildren();
+  for (const [label, day] of rows) {
+    const row = el('rateRows').insertRow();
+    row.insertCell().textContent = label;
+    const date = season + '-12-' + String(day).padStart(2, '0');
+    row.insertCell().textContent = money(price(+el('rateProgram').value, date, +el('rateMinutes').value));
+  }
+}
+el('rateProgram').onchange = el('rateMinutes').onchange = renderRates;
+el('pickRate').onclick = () => selectProgram(+el('rateProgram').value, +el('rateMinutes').value);
+renderRates();
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
 for (const surface of document.querySelectorAll('.folio, .card')) {
   surface.addEventListener('pointermove', event => {
